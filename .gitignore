@@ -1,0 +1,2 @@
+# Recursively drop node_modules folder
+api/node_modules
