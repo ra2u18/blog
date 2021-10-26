@@ -5,14 +5,13 @@ const crypto = require('crypto');
 
 // Local imports
 const User = require('./../models/user');
-const { isEmailAvailable } = require('./../utils/userUtils');
 
 const register = async (data, role, res) => {
   try {
     const emailTaken = await isEmailAvailable(data.email);
 
     // User is taken, so return
-    if (emailTaken) {
+    if (!emailTaken) {
       return res.status(400).json({
         status: 'failed',
         data: {
@@ -293,10 +292,17 @@ const changePassword = async (data, res) => {
   }
 };
 
+async function isEmailAvailable(email) {
+  let user = await User.findOne({ email: email });
+  if (user) return false;
+
+  return true;
+}
+
 module.exports = {
   login,
   register,
-  verify,
+  verifyEmail,
   forgotPassword,
   resetPassword,
   changePassword,
